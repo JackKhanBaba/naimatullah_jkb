@@ -77,6 +77,44 @@ $(document).ready(function(){
         }
     });
 });
+// EmailJS Form Submission
+document.getElementById('contact-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const sendBtn = document.getElementById('send-btn');
+    const originalText = sendBtn.innerHTML;
+    
+    // Disable button and show loading
+    sendBtn.disabled = true;
+    sendBtn.innerHTML = 'Sending...';
+    
+    // Send email using EmailJS
+    emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', this)
+        .then(function() {
+            // Success message
+            sendBtn.innerHTML = 'Message Sent!';
+            sendBtn.style.background = '#4CAF50';
+            document.getElementById('contact-form').reset();
+            
+            // Re-enable button after 3 seconds
+            setTimeout(function() {
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = originalText;
+                sendBtn.style.background = '';
+            }, 3000);
+        }, function(error) {
+            // Error message
+            sendBtn.innerHTML = 'Failed to Send';
+            sendBtn.style.background = '#f44336';
+            
+            // Re-enable button after 3 seconds
+            setTimeout(function() {
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = originalText;
+                sendBtn.style.background = '';
+            }, 3000);
+        });
+});
 
 // pre loader js
 var loader = document.getElementById("preloader");
@@ -98,3 +136,4 @@ window.onscroll = function(){
         percent.innerHTML = "Page Scrolled " + Math.round(progress) + "%"
     }
 }
+
