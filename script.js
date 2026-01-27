@@ -1,4 +1,4 @@
-  $(document).ready(function(){
+$(document).ready(function(){
     $(window).scroll(function(){
         // sticky navbar on scroll script
         if(this.scrollY > 20){
@@ -77,3 +77,24 @@
         }
     });
 });
+
+// pre loader js
+var loader = document.getElementById("preloader");
+window.addEventListener("load", function(){
+    loader.style.display = "none";
+});
+
+// scroll bar js
+var preogressbar = document.getElementById("preogressbar")
+var percent = document.getElementById("percent")
+
+var totalHeight = document.body.scrollHeight - window.innerHeight;
+window.onscroll = function(){
+    var progress = (window.pageYOffset / totalHeight) * 100;
+    if(preogressbar) {
+        preogressbar.style.height = progress + "%";
+    }
+    if(percent) {
+        percent.innerHTML = "Page Scrolled " + Math.round(progress) + "%"
+    }
+}
