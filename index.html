@@ -347,30 +347,33 @@
                 </div>
                 <div class="column right">
                     <div class="text">Message me</div>
-                 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-                    <script>
-                        (function() {
-                            emailjs.init("YOUR_PUBLIC_KEY"); // Get this from EmailJS dashboard
-                        })();
-                    </script>
-                    
-                    <form id="contact-form">
+                 <form id="contact-form">
                         <div class="fields">
                             <div class="field name">
-                                <input type="text" id="from_name" name="from_name" placeholder="Name" required>
+                                <input type="text" name="user_name" placeholder="Name" required>
                             </div>
+
                             <div class="field email">
-                                <input type="email" id="email_id" name="email_id" placeholder="Email" required>
+                                <input type="email" name="user_email" placeholder="Email" required>
                             </div>
                         </div>
+
                         <div class="field">
-                            <input type="text" id="subject" name="subject" placeholder="Subject" required>
+                            <input type="tel" name="user_phone" placeholder="Phone (optional)">
                         </div>
+
+                        <div class="field">
+                            <input type="text" name="subject" placeholder="Subject" required>
+                        </div>
+
                         <div class="field textarea">
-                            <textarea id="message" name="message" cols="30" rows="10" placeholder="Message.." required></textarea>
+                            <textarea name="message" cols="30" rows="10" placeholder="Message..." required></textarea>
                         </div>
+
                         <div class="button-area">
-                            <button type="submit" id="send-btn">Send message</button>
+                            <button type="submit" id="send-btn">
+                                Send message
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -428,5 +431,6 @@
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
