@@ -77,44 +77,76 @@ $(document).ready(function(){
         }
     });
 });
-// EmailJS Form Submission
-document.getElementById('contact-form').addEventListener('submit', function(event) {
-    event.preventDefault();
+
+
+// EmailJS initialization - Simple version
+function initEmailJS() {
+    if (window.emailjs) {
+        emailjs.init("m7jwtGy_runU1FDG1");
+        return Promise.resolve();
+    }
     
-    const sendBtn = document.getElementById('send-btn');
-    const originalText = sendBtn.innerHTML;
-    
-    // Disable button and show loading
-    sendBtn.disabled = true;
-    sendBtn.innerHTML = 'Sending...';
-    
-    // Send email using EmailJS
-    emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', this)
-        .then(function() {
-            // Success message
-            sendBtn.innerHTML = 'Message Sent!';
-            sendBtn.style.background = '#4CAF50';
-            document.getElementById('contact-form').reset();
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js';
+        script.onload = () => {
+            emailjs.init("m7jwtGy_runU1FDG1");
+            resolve();
+        };
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
+
+// Form handling
+const form = document.getElementById("contact-form");
+const btn = document.getElementById("send-btn");
+
+if (form && btn) {
+    form.addEventListener("submit", async function(e) {
+        e.preventDefault();
+        
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        btn.disabled = true;
+        
+        try {
+            await initEmailJS();
             
-            // Re-enable button after 3 seconds
-            setTimeout(function() {
-                sendBtn.disabled = false;
-                sendBtn.innerHTML = originalText;
-                sendBtn.style.background = '';
-            }, 3000);
-        }, function(error) {
-            // Error message
-            sendBtn.innerHTML = 'Failed to Send';
-            sendBtn.style.background = '#f44336';
+            const params = {
+                user_name: form.user_name.value,
+                user_email: form.user_email.value,
+                user_phone: form.user_phone.value || "Not provided",
+                subject: form.subject.value,
+                message: form.message.value,
+                timestamp: new Date().toLocaleString()
+            };
             
-            // Re-enable button after 3 seconds
-            setTimeout(function() {
-                sendBtn.disabled = false;
-                sendBtn.innerHTML = originalText;
-                sendBtn.style.background = '';
+            await emailjs.send("service_3r528gj", "template_nix17h6", params);
+            
+            btn.innerHTML = '<i class="fas fa-check"></i> Sent!';
+            btn.style.background = "#4CAF50";
+            form.reset();
+            
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+                btn.style.background = "";
             }, 3000);
-        });
-});
+            
+        } catch (error) {
+            console.error("Error:", error);
+            btn.innerHTML = '<i class="fas fa-times"></i> Failed';
+            btn.style.background = "#f44336";
+            
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+                btn.style.background = "";
+            }, 3000);
+        }
+    });
+}
 
 // pre loader js
 var loader = document.getElementById("preloader");
@@ -136,4 +168,3 @@ window.onscroll = function(){
         percent.innerHTML = "Page Scrolled " + Math.round(progress) + "%"
     }
 }
-
